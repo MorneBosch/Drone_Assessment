@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -106,14 +107,18 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Celery configuration
+# Celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_TIMEZONE = 'UTC'
+
+# Celery configuration
 
 CELERY_BEAT_SCHEDULE = {
-    'log_battery_every_minute': {
+    'log-battery-every-minute': {
         'task': 'drones.tasks.log_battery_level',
-        'schedule': timedelta(minutes=1),  # Run every minute
+        'schedule': crontab(minute='*/1'),
     },
 }
