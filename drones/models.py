@@ -51,7 +51,6 @@ class Drone(models.Model):
         if total_weight > self.weight_limit:
             raise ValidationError("Total weight exceeds the drone's weight limit.")
 
-        # Add medications if validations pass
         self.medications.add(*medications)
         if self.state == self.IDLE:
             self.state = self.LOADING
@@ -70,7 +69,6 @@ class Drone(models.Model):
         self.save()
 
 class Medication(models.Model):
-    # Validator for the code field
     CODE_VALIDATOR = RegexValidator(
         regex=r'^[A-Z0-9_]+$',
         message="Code must contain only uppercase letters, numbers, and underscores."

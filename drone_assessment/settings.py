@@ -122,3 +122,7 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/1'),
     },
 }
+
+# Make sure test run synchronously during testing
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
