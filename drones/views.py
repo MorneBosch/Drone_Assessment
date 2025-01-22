@@ -48,12 +48,14 @@ def load_medication(request, pk):
             if not medication_ids:
                 return JsonResponse({"error": "No medication IDs provided."}, status=400)
 
-            try:
-                medications = Medication.objects.filter(id__in=medication_ids)
-                if medications.count() != len(medication_ids):
-                    return JsonResponse({"error": "One or more Medications not found."}, status=404)
-            except ValueError:
-                return JsonResponse({"error": "Medication IDs must be valid integers."}, status=400)
+            # Validate each medication ID and allow duplicates
+            medications = []
+            for med_id in medication_ids:
+                try:
+                    medication = Medication.objects.get(id=med_id)
+                    medications.append(medication)
+                except Medication.DoesNotExist:
+                    return JsonResponse({"error": f"Medication with ID {med_id} not found."}, status=404)
 
             # Check if drone's battery is sufficient for loading
             if drone.battery_capacity < 25:

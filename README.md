@@ -71,14 +71,14 @@ python manage.py runserver
 Start the Celery worker to handle background tasks:
 
 ```bash
-celery -A drones worker --loglevel=info
+celery -A drone_assessment.celery beat -l info
 ```
 
 ### 9. Start the Celery Beat Scheduler
 To schedule periodic tasks:
 
 ```bash
-celery -A drones beat --loglevel=info
+celery -A drone_assessment.celery worker -l info -P solo
 ```
 
 ## API Endpoints
